@@ -1,0 +1,22 @@
+name: dust
+version: 0.1.0
+
+description: A fast, intuitive disk usage analyzer implemented in Crystal.
+repository: https://github.com/kojix2/dust-cr
+homepage: https://github.com/kojix2/dust-cr
+
+authors:
+  - kojix2 <2xijok@gmail.com>
+
+targets:
+  dust:
+    main: src/dust.cr
+
+crystal: ">= 1.21.1"
+
+license: Apache-2.0
+
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: ~> 1.7

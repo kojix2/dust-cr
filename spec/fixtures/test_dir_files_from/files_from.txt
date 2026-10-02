@@ -1,0 +1,2 @@
+spec/fixtures/test_dir_files_from/a_file
+spec/fixtures/test_dir_files_from/hello_file

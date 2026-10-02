@@ -1,0 +1,22 @@
+name: CI
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: latest
+      - run: shards install
+      - run: crystal tool format --check src spec
+      - run: crystal spec
+      - run: crystal run lib/ameba/bin/ameba.cr -- src spec
