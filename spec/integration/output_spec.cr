@@ -1,6 +1,7 @@
 require "json"
 
 require "./spec_helper"
+require "../support/files"
 
 describe "output modes" do
   it "prints no colors with -c" do
@@ -16,24 +17,23 @@ describe "output modes" do
   end
 
   it "prints JSON with -j" do
-    output = SpecSupport.run!(["-j", SpecSupport.fixture("test_dir/")])
+    path = SpecSupport.fixture("test_dir/many/hello_file")
+    output = SpecSupport.run!(["-j", "-s", path])
     json = JSON.parse(output)
-    json["name"].as_s.should eq(SpecSupport.fixture("test_dir/").chomp('/'))
-    json["size"].as_s.should eq("4.0Ki")
-    json["children"].as_a.size.should eq(1)
+    json["name"].as_s.should eq(path)
+    json["size"].as_s.should eq("6B")
+    json["children"].as_a.should be_empty
   end
 
-  it "prints sizes in powers of 1000 with -o si" do
-    output = SpecSupport.run!(["-c", "-o", "si", SpecSupport.fixture("test_dir2")])
-    output.should contain("12K ┌─┴")
-  end
+  it "formats sizes with -o" do
+    SpecSupport.temp_dir("dust-cr-output") do |dir|
+      path = File.join(dir, "sample")
+      File.write(path, "x" * 12_288)
 
-  it "prints sizes in a fixed unit with -o" do
-    output = SpecSupport.run!(["-c", "-o", "kib", SpecSupport.fixture("test_dir2")])
-    output.should contain("12Ki ┌─┴")
-
-    output = SpecSupport.run!(["-c", "-o", "b", SpecSupport.fixture("test_dir2")])
-    output.should contain("12288B ┌─┴ test_dir2")
+      SpecSupport.run!(["-c", "-s", "-o", "si", path]).should contain("12K ┌── sample")
+      SpecSupport.run!(["-c", "-s", "-o", "kib", path]).should contain("12Ki ┌── sample")
+      SpecSupport.run!(["-c", "-s", "-o", "b", path]).should contain("12288B ┌── sample")
+    end
   end
 
   it "moves the bars to the right with -B" do
