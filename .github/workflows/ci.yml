@@ -13,6 +13,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v7
+      - run: sudo apt-get update -y
       - uses: crystal-lang/install-crystal@v1
         with:
           crystal: latest
