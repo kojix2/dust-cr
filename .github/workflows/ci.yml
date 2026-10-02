@@ -7,13 +7,14 @@ permissions:
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu, macos]
     steps:
       - uses: actions/checkout@v7
-      - run: sudo apt-get update -y
+      - if: matrix.os == 'ubuntu'
+        run: sudo apt-get update -y
       - uses: crystal-lang/install-crystal@v1
         with:
           crystal: latest
